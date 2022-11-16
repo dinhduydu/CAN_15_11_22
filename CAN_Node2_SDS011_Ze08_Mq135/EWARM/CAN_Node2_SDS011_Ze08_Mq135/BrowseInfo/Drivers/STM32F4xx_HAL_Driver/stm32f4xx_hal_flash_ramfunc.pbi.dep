@@ -1,0 +1,39 @@
+E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\CAN_Node2_SDS011_Ze08_Mq135\BrowseInfo\Drivers\STM32F4xx_HAL_Driver\stm32f4xx_hal_flash_ramfunc.pbi: \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Core\Inc\stm32f4xx_hal_conf.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Include\core_cm4.h \
+  E:\IAR\arm\inc\c\stdint.h E:\IAR\arm\inc\c\ycheck.h \
+  E:\IAR\arm\inc\c\yvals.h E:\IAR\arm\inc\c\DLib_Defaults.h \
+  E:\IAR\arm\inc\c\DLib_Config_Full.h E:\IAR\arm\inc\c\DLib_Product.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Include\cmsis_version.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Include\cmsis_iccarm.h \
+  E:\IAR\arm\inc\c\aarch32\iccarm_builtin.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Include\mpu_armv7.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
+  E:\IAR\arm\inc\c\stddef.h E:\IAR\arm\inc\c\ysizet.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_exti.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_cortex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_adc.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_adc.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_adc_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_can.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ramfunc.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
+  E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h

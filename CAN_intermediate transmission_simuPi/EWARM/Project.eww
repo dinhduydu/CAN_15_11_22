@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\..\..\CAN_F4_BH1750_10_11\EWARM\CAN_F4_BH1750_10_11.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\CAN_intermediate transmission_simuPi.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\simuPi_Uart_nodeCAN\EWARM\simuPi_Uart_nodeCAN.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>

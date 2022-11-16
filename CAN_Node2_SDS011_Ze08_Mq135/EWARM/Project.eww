@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\..\..\CAN_F1_9_11_22_DS18b20_ex_source\EWARM\CAN_F1_9_11_22_DS18b20_ex_source.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\CAN_F4_BH1750_10_11\EWARM\CAN_F4_BH1750_10_11.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\CAN_Node2_SDS011_Ze08_Mq135.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\CAN_Test_node_send\EWARM\CAN_Test_node_send.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\DS18B20_23_10_22\EWARM\DS18B20_23_10_22.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\SDS011_F4_29_10_22\EWARM\SDS011_F4_29_10_22.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>

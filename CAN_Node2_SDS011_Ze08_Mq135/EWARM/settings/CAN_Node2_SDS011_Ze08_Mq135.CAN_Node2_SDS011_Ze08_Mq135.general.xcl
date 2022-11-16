@@ -1,0 +1,15 @@
+"E:\IAR\arm\bin\armPROC.dll" 
+
+"E:\IAR\arm\bin\armSTLINK.dll" 
+
+"E:\STMWorkspace\MasteringMCU2\AC6\R\CAN_Node2_SDS011_Ze08_Mq135\EWARM\CAN_Node2_SDS011_Ze08_Mq135\Exe\CAN_Node2_SDS011_Ze08_Mq135.out" 
+
+--plugin="E:\IAR\arm\bin\armbat.dll" 
+
+--device_macro="E:\IAR\arm/config/debugger/ST/STM32F4xx.dmac" 
+
+--flash_loader="E:\IAR\arm/config/flashloader/ST/FlashSTM32F4xxx.board" 
+
+
+
+

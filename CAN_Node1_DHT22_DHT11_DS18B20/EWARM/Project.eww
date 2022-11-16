@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\..\..\DHT11_17_10_22\EWARM\Backup of DHT11_17_10_22.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\CAN_Node1_DHT22_DHT11_DS18B20.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>
