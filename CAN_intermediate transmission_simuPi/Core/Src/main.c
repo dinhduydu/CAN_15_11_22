@@ -142,21 +142,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if (1U == check_command(UART_Buffer,Command_Case1))
     {
       CAN_Copy_data(Command_Case1,TxData);
-      User_Case = 1;
     }
     else if (1U == check_command(UART_Buffer,Command_Case2))
     {
       CAN_Copy_data(Command_Case2,TxData);
-      User_Case = 2;
-    }
-    else if (1U == check_command(UART_Buffer,Command_Case3))
-    {
-      CAN_Copy_data(Command_Case3,TxData);
-      User_Case = 3;
     }
     else
     {
-      User_Case = 0;
     }
     if (HAL_OK != HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox))
     {
@@ -184,22 +176,22 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
       if (General_RxData[0] == '1')
       {
-        CAN_Data_FromNode(General_RxData,SDS011_pm25_RxData);
+        CAN_Data_FromNode(General_RxData,DHT11_RxData);
       }
       else if (General_RxData[0] == '2')
       {
-        CAN_Data_FromNode(General_RxData,);
+        CAN_Data_FromNode(General_RxData,DHT22_RxData);
       }
       else if (General_RxData[0] == '3')
       {
-        CAN_Data_FromNode(General_RxData,);
+        CAN_Data_FromNode(General_RxData,DS18B20_RxData);
       }   
     }
     else if (RxHeader.StdId == 0x659)
     {
       if (General_RxData[0] == '4')
       {
-        CAN_Data_FromNode(Genaral_RxData,SDS011_pm25_RxData);
+        CAN_Data_FromNode(General_RxData,SDS011_pm25_RxData);
       }
       else if(General_RxData[0] == '5')
       {
