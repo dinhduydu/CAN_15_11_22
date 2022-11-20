@@ -154,7 +154,7 @@ int main(void)
       TxHeader.DLC = 8;
     TxHeader.IDE = CAN_ID_STD;
     TxHeader.RTR = CAN_RTR_DATA;
-    TxHeader.StdId = 0x651;
+    TxHeader.StdId = 0x659;
   
   MX_TIM6_Init();
   
@@ -167,7 +167,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim6);
   /* USER CODE END 2 */
-
+  
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -182,7 +182,7 @@ int main(void)
      //HAL_UART_Transmit_IT(&huart2, data, size);
      //HAL_Delay(1000);
     
-     TxData[0] = '3';
+     TxData[0] = '4';
      TxData[1] = '.';
      TxData[2] = '0';
      TxData[3] = '0';
@@ -198,7 +198,7 @@ int main(void)
      //  Error_Handler();
      //}
      
-     TxData1[0] = '4';
+     TxData1[0] = '5';
      TxData1[1] = '.';
      TxData1[2] = '0';
      TxData1[3] = '0';
@@ -213,12 +213,12 @@ int main(void)
      HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData1,&TxMailbox);
      
      HAL_ADC_Start(&hadc1);
-     HAL_Delay(20);
+     HAL_Delay(1);
      MQ135_value = HAL_ADC_GetValue(&hadc1);
-     HAL_ADC_Stop(&hadc1);
+     //HAL_ADC_Stop(&hadc1);
      //HAL_Delay(5);
      
-     TxData2[0] = '5';
+     TxData2[0] = '6';
      TxData2[1] = '.';
      TxData2[2] = '0' + (uint32_t)MQ135_value/ 10000;
      TxData2[3] = '0'+ ((uint32_t)MQ135_value% 10000)/1000;
@@ -300,7 +300,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_10B;
   hadc1.Init.ScanConvMode = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
