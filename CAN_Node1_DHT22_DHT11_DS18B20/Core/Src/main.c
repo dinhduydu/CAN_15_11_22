@@ -1,44 +1,20 @@
 #include "main.h"
+#include "temp.h"
 
-/***************************Temp Function************************/
-#define DHT11_PORT      GPIOA
-#define DHT22_PORT      GPIOA
-#define DS18B20_PORT    GPIOA
-#define DHT11_PIN       GPIO_PIN_1
-#define DHT22_PIN       GPIO_PIN_0
-#define DS18B20_PIN     GPIO_PIN_2
+float Temperature_DHT11 = 0;
+float Temperature_DHT22 = 0;
+float Temperature_DS18B20 = 0;
 
-/**DHT11**/
-uint8_t Temp_byte1;
-uint8_t Temp_byte2;
-uint8_t Rh_byte1;
-uint8_t Rh_byte2;
-uint16_t TEMP;
-uint16_t SUM;
-uint8_t Presence = 0;
-float Temperature = 0;
-
-/**DHT22**/
-uint8_t Temp_byte1_1;
-uint8_t Temp_byte2_1;
-uint8_t Rh_byte1_1;
-uint8_t Rh_byte2_1;
-uint16_t TEMP_1;
-uint16_t SUM_1;
-uint8_t Presence_1 = 0;
-float Temperature_1 = 0;
-
-
+volatile uint8_t Flag = 0;
 CAN_HandleTypeDef hcan1;
-
-
 CAN_TxHeaderTypeDef TxHeader;
 uint32_t TxMailbox;
 CAN_RxHeaderTypeDef RxHeader;
+
 uint8_t TxData[8U]; /* DHT11 to transmit */
 uint8_t TxData1[8U]; /* DHT22 to transmit */
+uint8_t TxData2[8U]; /* DS18B20 to transmit */
 uint8_t RxData[8U];
-
 
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
@@ -52,187 +28,17 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 void CAN_Filter_Config(void);
-
-
 static void MX_TIM6_Init(void);
 static void MX_TIM7_Init(void);
-/* USER CODE BEGIN PFP */
-
-
-
-/********************* User delay  **************************/
-void delay(uint16_t time);
-
-void delay(uint16_t time)
-{
-  /* change your code here for the delay in microseconds */
-  __HAL_TIM_SET_COUNTER(&htim6,0);
-  /* wait for the counter reach the entered value */
-  while((__HAL_TIM_GET_COUNTER(&htim6))<time);
-}
-
-/*********************************Temp Set up  *****************/
-void Set_PinInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-void Set_PinOutput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-
-void Set_PinOutput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
-}
-
-void Set_PinInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
-}
-
-/******************************DHT11 function *********************/
-void DHT11_Start (void);
-uint8_t DHT11_Check_Response (void);
-uint8_t DHT11_Read (void);
-
-/* function to send the start signal */
-void DHT11_Start (void)
-{
-  Set_PinOutput(DHT11_PORT, DHT11_PIN); /* Set the pin as output */
-  HAL_GPIO_WritePin(DHT11_PORT,DHT11_PIN,GPIO_PIN_RESET); /* Pull the pin low */
-  delay(18000); /* Wait for 18ms */
-  HAL_GPIO_WritePin(DHT11_PORT,DHT11_PIN,GPIO_PIN_SET); /* Pull the pin high */
-  delay(20); /* Wait for 20us */
-  Set_PinInput(DHT11_PORT,DHT11_PIN); /* Set as input */
-}
-
-uint8_t DHT11_Check_Response (void)
-{
-  uint8_t Response = 0;
-  delay(40);
-  if (!(HAL_GPIO_ReadPin(DHT11_PORT, DHT11_PIN)))
-  {
-    delay(80);
-    if ((HAL_GPIO_ReadPin(DHT11_PORT,DHT11_PIN)))
-    {
-      Response = 1;
-    }
-    else
-    {
-      Response = -1; /* 255 */
-    }
-  }
-  while (( HAL_GPIO_ReadPin(DHT11_PORT,DHT11_PIN)))
-  {
-    /* Wait for the pin to go low */
-  }
-  return Response;
-}
-
-uint8_t DHT11_Read (void)
-{
-  uint8_t i;
-  uint8_t j;
-  
-  for (j = 0; j < 8; j ++)
-  {
-    while (!(HAL_GPIO_ReadPin(DHT11_PORT, DHT11_PIN)))
-    {
-      /* Wait for the pin to go high. It took about 50us both "0" either "1". */
-    }
-    delay(40); /* Wait for 40us */
-    if (!(HAL_GPIO_ReadPin(DHT11_PORT,DHT11_PIN)))
-    {
-      i &= ~(1<<(7-j)); /* Write 0 */
-    }
-    else
-    {
-      i |= (1<<(7-j)); /* if the pin is high, write 1 */
-    }
-    while ((HAL_GPIO_ReadPin(DHT11_PORT,DHT11_PIN)))
-    {
-      /* Wait for the pin to go high */
-    }
-  }
-  return i;
-}
-
-/******************************DHT22 function *********************/
-void DHT22_Start (void);
-uint8_t DHT22_Check_Response (void);
-
-void DHT22_Start (void)
-{
-  Set_PinOutput(DHT22_PORT, DHT22_PIN); /* Set the pin as output */
-  HAL_GPIO_WritePin(DHT22_PORT,DHT22_PIN,GPIO_PIN_RESET); /* Pull the pin low */
-  delay(1200); /* Wait for > 1ms */
-  HAL_GPIO_WritePin(DHT22_PORT,DHT22_PIN,GPIO_PIN_SET); /* Pull the pin high */
-  delay(20); /* Wait for 20us */
-  Set_PinInput(DHT22_PORT,DHT22_PIN); /* Set as input */
-}
-
-uint8_t DHT22_Check_Response (void)
-{
-  uint8_t Response = 0;
-  delay(40);
-  if (!(HAL_GPIO_ReadPin(DHT22_PORT, DHT22_PIN)))
-  {
-    delay(80);
-    if ((HAL_GPIO_ReadPin(DHT22_PORT,DHT22_PIN)))
-    {
-      Response = 1; /* if the pin is high, response is OK */
-    }
-    else
-    {
-      Response = -1; /* 255 */
-    }
-  }
-  while (( HAL_GPIO_ReadPin(DHT22_PORT,DHT22_PIN)))
-  {
-    /* Wait for the pin to go low */
-  }
-  return Response;
-}
-
-uint8_t DHT22_Read (void)
-{
-  uint8_t i;
-  uint8_t j;
-  
-  for (j = 0; j < 8; j ++)
-  {
-    while (!(HAL_GPIO_ReadPin(DHT22_PORT, DHT22_PIN)))
-    {
-      /* Wait for the pin to go high. It took about 50us both "0" either "1". */
-    }
-    delay(40); /* Wait for 40us */
-    if (!(HAL_GPIO_ReadPin(DHT22_PORT,DHT22_PIN)))
-    {
-      i &= ~(1<<(7-j)); /* Write 0 */
-    }
-    else
-    {
-      i |= (1<<(7-j)); /* if the pin is high, write 1 */
-    }
-    while ((HAL_GPIO_ReadPin(DHT22_PORT,DHT22_PIN)))
-    {
-      /* Wait for the pin to go high */
-    }
-  }
-  return i;
-}
-
-/************************* User define ***************************************/
-uint8_t Flag = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == htim7.Instance)
   {
-    Flag = 1;
+   HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox);
+   HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData1,&TxMailbox);
+   HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData2,&TxMailbox);
+   Flag = 1;
   }
 }
 
@@ -276,115 +82,91 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   CAN_Filter_Config();
-  
-    TxHeader.DLC = 8;
+ 
+  /**
+   * @brief Config CAN Data frame
+   * 
+   */
+  TxHeader.DLC = 8;
   TxHeader.IDE = CAN_ID_STD;
   TxHeader.RTR = CAN_RTR_DATA;
   TxHeader.StdId = 0x651;
-  
-  
-  
+ 
   MX_TIM6_Init();
   MX_TIM7_Init();
-  /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim6);
-  /* USER CODE END 2 */
-  HAL_TIM_Base_Start_IT(&htim7);
-  /* Infinite loop */
-  
-
+  /**
+   * @brief Active CAN Controller
+   * 
+   */
   if (HAL_OK != HAL_CAN_Start(&hcan1))
   {
     Error_Handler();
   }
-  
+ 
+  /**
+   * @brief Active CAN notification - flag
+   * 
+   */
   if (HAL_OK != HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING))
   {
     Error_Handler();
   }
-  
+  /**
+   * @brief Construct a new hal tim base start object
+   * 
+   */
+  HAL_TIM_Base_Start(&htim6);
+  HAL_TIM_Base_Start_IT(&htim7);
 
-  /* USER CODE BEGIN WHILE */
+  /* Infinite loop */
   while (1)
   {
-    /* USER CODE END WHILE */
-    if (Flag == 1)
-    {
+    /* DHT11 read and send process. */
+    Temperature_DHT11 = DHT11_Data();
       
-
+    TxData[0] = '1';
+    TxData[1] = '.';
+    TxData[2] = '0';
+    TxData[3] = '0';
+    TxData[4] = '0' + (uint8_t)Temperature_DHT11/ 100;
+    TxData[5] = '0' + ((uint8_t)Temperature_DHT11 % 100)/10;
+    TxData[6] = '0' + (uint8_t)Temperature_DHT11% 10;
+    TxData[7] = '\n';     
+    HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox);
      
+    /* DHT22 read and send process. */
      
-     
-     
-     
-      DHT22_Start();
-      /* Record the response from the sensor */
-      Presence_1 = DHT22_Check_Response();
-      Rh_byte1_1 = DHT22_Read();
-      Rh_byte2_1 = DHT22_Read();
-      Temp_byte1_1 = DHT22_Read();
-      Temp_byte2_1 = DHT22_Read();
-      SUM_1 = DHT22_Read();
-      
-      TEMP_1 = ((Temp_byte1_1 <<8)|Temp_byte2_1);
-      /* USER CODE BEGIN 3 */
-      Temperature_1 = (float) (TEMP_1/10.0);
-      
-      
-      
-      TxData1[0] = '2';
-     TxData1[1] = '.';
-     TxData1[2] = '0';
-     TxData1[3] = '0';
-     TxData1[4] = '0' + (uint8_t)Temperature_1/ 100;
-     TxData1[5] = '0' + ((uint8_t)Temperature_1 % 100)/10;
-     TxData1[6] = '0' + (uint8_t)Temperature_1% 10;
-     TxData1[7] = '\n';
+    Temperature_DHT22 = DHT22_Data();
+    TxData1[0] = '2';
+    TxData1[1] = '.';
+    TxData1[2] = '0';
+    TxData1[3] = '0';
+    TxData1[4] = '0' + (uint8_t)Temperature_DHT22/ 100;
+    TxData1[5] = '0' + ((uint8_t)Temperature_DHT22 % 100)/10;
+    TxData1[6] = '0' + (uint8_t)Temperature_DHT22% 10;
+    TxData1[7] = '\n';
      
     HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData1,&TxMailbox);
-//    
-//    
-//     
-//     
-//     
-//     
-//     
-           DHT11_Start();
-      /* Record the response from the sensor */
-      Presence = DHT11_Check_Response();
-      Rh_byte1 = DHT11_Read();
-      Rh_byte2 = DHT11_Read();
-      Temp_byte1 = DHT11_Read();
-      Temp_byte2 = DHT11_Read();
-      SUM = DHT11_Read();
-      
-      TEMP = Temp_byte1;
-      /* USER CODE BEGIN 3 */
-      Temperature = (float) TEMP;     
-      
-      TxData[0] = '1';
-     TxData[1] = '.';
-     TxData[2] = '0';
-     TxData[3] = '0';
-     TxData[4] = '0' + (uint8_t)Temperature/ 100;
-     TxData[5] = '0' + ((uint8_t)Temperature % 100)/10;
-     TxData[6] = '0' + (uint8_t)Temperature% 10;
-     TxData[7] = '\n';
-  
-     HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox);
-     
-     
-     
-     
-     
-      Flag = 0;
-      }
-
-    /* USER CODE BEGIN 3 */
+    
+    Temperature_DS18B20 = DS18B20_Data();
+    /* DS18b20 read and send process. */
+      TxData2[0] = '3';
+      TxData2[1] = '.';
+      TxData2[2] = '0';
+      TxData2[3] = '0';
+      TxData2[4] = '0' + (uint8_t)Temperature_DS18B20/ 100;
+      TxData2[5] = '0' + ((uint8_t)Temperature_DS18B20 % 100)/10;
+      TxData2[6] = '0' + (uint8_t)Temperature_DS18B20% 10;
+      TxData2[7] = '\n';
+    
+    HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData2,&TxMailbox);
   }
-  /* USER CODE END 3 */
 }
 
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -546,7 +328,7 @@ static void MX_TIM7_Init(void)
   htim7.Instance = TIM7;
   htim7.Init.Prescaler = 7200-1;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 10000-1;
+  htim7.Init.Period = 30000-1;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
