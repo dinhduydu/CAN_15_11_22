@@ -18,22 +18,28 @@ volatile uint8_t Flag = 0; /* Flag when timer interrupt */
  * 
  */
 uint8_t General_RxData[8U];
-uint8_t DHT11_RxData[8U];
-uint8_t DHT22_RxData[8U];
-uint8_t DS18B20_RxData[8U];
-uint8_t SDS011_pm25_RxData[8U];
-uint8_t SDS011_pm10_RxData[8U];
-uint8_t MQ135_RxData[8U];
-uint8_t HCSR_04_01_RxData[8U];
-uint8_t HCSR_04_02_RxData[8U];
-uint8_t HCSR_05_01_RxData[8U];
-uint8_t HCSR_05_02_RxData[8U];
+uint8_t DHT11_RxData[8U]          = "NoData\n";
+uint8_t DHT22_RxData[8U]          = "NoData\n";
+uint8_t DS18B20_RxData[8U]        = "NoData\n";
+uint8_t SDS011_pm25_RxData[8U]    = "NoData\n";
+uint8_t SDS011_pm10_RxData[8U]    = "NoData\n";
+uint8_t MQ135_RxData[8U]          = "NoData\n";
+uint8_t HCSR_04_01_RxData[8U]     = "NoData\n";
+uint8_t HCSR_04_02_RxData[8U]     = "NoData\n";
+uint8_t HCSR_05_01_RxData[8U]     = "NoData\n";
+uint8_t HCSR_05_02_RxData[8U]     = "NoData\n";
 
 /**
  * @brief UART Buffer
  * 
  */
 uint8_t UART_Buffer[8U];
+
+/**
+ * @brief Send header message Block of data.
+ * 
+ */
+uint8_t Start_New_Mess[8U] = "NewData\n";
 
 /**
  * @brief CAN handler
@@ -89,6 +95,7 @@ uint8_t check_command(uint8_t *command,uint8_t *compare_command);
  * @param Dest_Data 
  */
 void CAN_Data_FromNode(uint8_t *RxData,uint8_t *Dest_Data);
+
 /***************************************************************************************
  * User Function
 ***************************************************************************************/
@@ -139,30 +146,28 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     {
       Error_Handler();
     }
-    if (1U == check_command(UART_Buffer,Command_Case1))
-    {
-      CAN_Copy_data(Command_Case1,TxData);
-    }
-    else if (1U == check_command(UART_Buffer,Command_Case2))
-    {
-      CAN_Copy_data(Command_Case2,TxData);
-    }
     else
     {
-    }
-    if (HAL_OK != HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox))
-    {
-       Error_Handler();
-    }
-    else
-    {
-    
-    }
-  } 
+      /* Check command from Pi */
+      if (1U == check_command(UART_Buffer,Command_Case1))
+      {
+        CAN_Copy_data(Command_Case1,TxData);
+      }
+      else if (1U == check_command(UART_Buffer,Command_Case2))
+      {
+        CAN_Copy_data(Command_Case2,TxData);
+      }
+      /* Send a message to all node with the corresponding command */
+      if (HAL_OK != HAL_CAN_AddTxMessage(&hcan1,&TxHeader,TxData,&TxMailbox))
+      {
+        Error_Handler();
+      }
+    } 
+  }  
 }
 
 /*******************************************************************
- * CAN receive call back
+ * CAN receive call back - Receive message from all node
 *******************************************************************/
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
@@ -202,14 +207,27 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         CAN_Data_FromNode(General_RxData,MQ135_RxData);
       }
     }
-    else if (RxHeader.StdId == 0x103)
+    else if (RxHeader.StdId == 0x503)
     {
-      
+      if (General_RxData[0] == '7')
+      {
+        CAN_Data_FromNode(General_RxData,HCSR_04_01_RxData);
+      }
+      else if (General_RxData[0] == '8')
+      {
+        CAN_Data_FromNode(General_RxData,HCSR_04_02_RxData);
+      }
+      else if (General_RxData[0] == '9')
+      {
+        CAN_Data_FromNode(General_RxData,HCSR_05_01_RxData);
+      }
+      else if (General_RxData[0] == 'X')
+      {
+        CAN_Data_FromNode(General_RxData,HCSR_05_02_RxData);
+      }
     }
   }
 }
-
-
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -281,30 +299,17 @@ int main(void)
   {
     if (Flag == 1)
     {
-      if (HAL_OK != HAL_UART_Transmit(&huart2,SDS011_pm25_RxData, 8,1000))
-      {
-          Error_Handler();
-      }
-      else
-      {
-        
-      }
-      if (HAL_OK != HAL_UART_Transmit(&huart2,SDS011_pm10_RxData, 8,1000))
-      {
-          Error_Handler();
-      }
-      else
-      {
-        
-      }
-      if (HAL_OK != HAL_UART_Transmit(&huart2,MQ135_RxData, 8,1000))
-      {
-          Error_Handler();
-      }
-      else
-      {
-        
-      }
+      HAL_UART_Transmit(&huart2,Start_New_Mess,8,1000);
+      HAL_UART_Transmit(&huart2,DHT11_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,DHT22_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,DS18B20_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,SDS011_pm25_RxData, 8,1000);
+      HAL_UART_Transmit(&huart2,SDS011_pm10_RxData, 8,1000);
+      HAL_UART_Transmit(&huart2,MQ135_RxData, 8,1000);
+      HAL_UART_Transmit(&huart2,HCSR_04_01_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,HCSR_04_02_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,HCSR_05_01_RxData,8,1000);
+      HAL_UART_Transmit(&huart2,HCSR_05_02_RxData,8,1000);
       Flag = 0; /* Reset Flag */
     }
     
@@ -402,11 +407,11 @@ void CAN_Filter_Config(void)
   can1_filter_init.FilterActivation = ENABLE;
   can1_filter_init.FilterBank  = 0;
   can1_filter_init.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  can1_filter_init.FilterIdHigh = (0x651)<<5;
+  can1_filter_init.FilterIdHigh = 0;
   can1_filter_init.FilterIdLow = 0x0000;
-  can1_filter_init.FilterMaskIdHigh = (0X446)<<5;
+  can1_filter_init.FilterMaskIdHigh = 0;
   can1_filter_init.FilterMaskIdLow = 0x0000;
-  can1_filter_init.FilterMode = CAN_FILTERMODE_IDLIST;
+  can1_filter_init.FilterMode = CAN_FILTERMODE_IDMASK;
   can1_filter_init.FilterScale = CAN_FILTERSCALE_32BIT;
   //can1_filter_init.SlaveStartFilterBank = 0; /* doesn't mastter in signel can controller */
   
@@ -436,7 +441,7 @@ static void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 7200-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 10000-1;
+  htim6.Init.Period = 30000-1;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -560,4 +565,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
