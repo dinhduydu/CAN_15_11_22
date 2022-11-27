@@ -3,7 +3,7 @@
 /* CAN TxBuffer - send command to Node 1, 2, 3 by Case Commnad*/
 uint8_t TxData[8U];
 uint8_t TxData1[8U];
-
+uint8_t Block_data[80U];
 /**
  * @brief Case Command
  * 
@@ -134,6 +134,54 @@ void CAN_Data_FromNode(uint8_t *RxData,uint8_t *Dest_Data)
 /**********************************************************************************************
  * Callback to application by interrupt
 ***********************************************************************************************/
+void Merge_Array(void)
+{
+  int i = 0;
+  for (i = 0; i < 8; i++)
+  {
+    Block_data[i] = Start_New_Mess[i];
+  }
+  for (i = 0; i < 8; i++)
+  {
+    Block_data[i+8] = DHT11_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+16] = DHT22_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+24] = DS18B20_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+32] = SDS011_pm25_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+40] = SDS011_pm10_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+48] = MQ135_RxData[i];
+  }
+      for (i = 0; i < 8; i++)
+  {
+    Block_data[i+24] = HCSR_04_01_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+32] = HCSR_04_02_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+40] = HCSR_05_01_RxData[i];
+  }
+    for (i = 0; i < 8; i++)
+  {
+    Block_data[i+48] = HCSR_05_02_RxData[i];
+  }
+}
 
 /*******************************************************************
  * UART receive call back
@@ -207,7 +255,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         CAN_Data_FromNode(General_RxData,MQ135_RxData);
       }
     }
-    else if (RxHeader.StdId == 0x503)
+    else if (RxHeader.StdId == 0x103)
     {
       if (General_RxData[0] == '7')
       {
@@ -299,17 +347,19 @@ int main(void)
   {
     if (Flag == 1)
     {
-      HAL_UART_Transmit(&huart2,Start_New_Mess,8,1000);
-      HAL_UART_Transmit(&huart2,DHT11_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,DHT22_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,DS18B20_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,SDS011_pm25_RxData, 8,1000);
-      HAL_UART_Transmit(&huart2,SDS011_pm10_RxData, 8,1000);
-      HAL_UART_Transmit(&huart2,MQ135_RxData, 8,1000);
-      HAL_UART_Transmit(&huart2,HCSR_04_01_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,HCSR_04_02_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,HCSR_05_01_RxData,8,1000);
-      HAL_UART_Transmit(&huart2,HCSR_05_02_RxData,8,1000);
+      Merge_Array();
+      HAL_UART_Transmit(&huart2,Block_data,80,2000);
+//      HAL_UART_Transmit(&huart2,Start_New_Mess,8,1000);
+//      HAL_UART_Transmit(&huart2,DHT11_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,DHT22_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,DS18B20_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,SDS011_pm25_RxData, 8,1000);
+//      HAL_UART_Transmit(&huart2,SDS011_pm10_RxData, 8,1000);
+//      HAL_UART_Transmit(&huart2,MQ135_RxData, 8,1000);
+//      HAL_UART_Transmit(&huart2,HCSR_04_01_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,HCSR_04_02_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,HCSR_05_01_RxData,8,1000);
+//      HAL_UART_Transmit(&huart2,HCSR_05_02_RxData,8,1000);
       Flag = 0; /* Reset Flag */
     }
     
